@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upitnik — Krečenje Zgrade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg:       #EFEFED;
+  --white:    #FFFFFF;
+  --navy:     #0F1923;
+  --navy2:    #1C2B3A;
+  --orange:   #E05500;
+  --orange-h: #C24700;
+  --border:   #E2E2DE;
+  --border2:  #D0D0CA;
+  --text:     #0F1923;
+  --muted:    #6B7280;
+  --dim:      #A8A89E;
+  --amber:    #C25F00;
+  --amber-bg: #FFF8F0;
+  --amber-bd: #F5C08A;
+  --green:    #0A7A3E;
+  --green-bg: #F0FBF4;
+  --green-bd: #6FCF97;
+  --red:      #C0392B;
+  --red-bg:   #FFF5F5;
+}
+
+html { scroll-behavior:smooth; }
+body {
+  font-family: 'Space Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ─── */
+header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 3rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo { display:flex; align-items:center; gap:.6rem; text-decoration:none; }
+.logo-dot {
+  width: 8px; height: 8px;
+  background: var(--orange);
+  border-radius: 50%;
+  animation: pulse-dot 2.8s ease-in-out infinite;
+}
+@keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 0 rgba(224,85,0,.5)} 60%{box-shadow:0 0 0 6px rgba(224,85,0,0)} }
+.logo-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: .1em;
+  color: var(--text);
+}
+.logo-text span { color: var(--orange); }
+.header-badge {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  padding: .25rem .7rem;
+  border-radius: 2px;
+}
+@media(max-width:640px){ header{padding:0 1.25rem} .header-badge{display:none} }
+
+/* ── DISCLAIMER BAR ─── */
+.disclaimer-bar {
+  border-bottom: 1px solid var(--amber-bd);
+  background: var(--amber-bg);
+  padding: .6rem 1.25rem;
+  font-size: .72rem;
+  color: var(--amber);
+  text-align: center;
+  letter-spacing: .04em;
+}
+
+/* ── MAIN ─── */
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2.5rem 3rem 6rem;
+}
+@media(max-width:640px){ .page{ padding:1.5rem 1.25rem 4rem } }
+
+/* ── CARD ─── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2.25rem;
+  transition: box-shadow .2s, border-color .2s;
+}
+
+/* ── CARD INTRO ─── */
+.card-intro {
+  padding: 2rem 2.25rem 1.5rem;
+  margin: -2.25rem -2.25rem 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--white);
+  border-radius: 4px 4px 0 0;
+}
+.card-intro h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.4rem, 6vw, 3.4rem);
+  line-height: .92;
+  letter-spacing: .02em;
+  color: var(--text);
+  margin-bottom: .5rem;
+}
+.card-intro h1 .accent {
+  background: linear-gradient(120deg, #E05500 0%, #FF8C38 45%, #C24700 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+@keyframes shimmer { 0%{background-position:0% center} 100%{background-position:200% center} }
+.card-intro-sub {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: .8rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ── STEP COUNTER ─── */
+.step-bar {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 1.75rem 0 2rem;
+}
+.step-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border2);
+  transition: background .3s, transform .3s;
+  flex-shrink: 0;
+}
+.step-dot.active { background: var(--orange); transform: scale(1.4); }
+.step-dot.done { background: var(--green); }
+.step-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: .8rem;
+  letter-spacing: .12em;
+  color: var(--dim);
+  margin-left: .5rem;
+}
+
+/* ── QUESTIONS ─── */
+.question-block {
+  display: none;
+  animation: fadeUp .3s ease both;
+}
+.question-block.active { display: block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+.q-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: .75rem;
+  letter-spacing: .15em;
+  color: var(--orange);
+  margin-bottom: .4rem;
+}
+.q-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  letter-spacing: .03em;
+  color: var(--text);
+  margin-bottom: 1.25rem;
+  line-height: 1.1;
+}
+.q-desc {
+  font-size: .78rem;
+  color: var(--muted);
+  margin-top: -.8rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.6;
+}
+
+/* ── OPTION BUTTONS ─── */
+.options { display: flex; flex-direction: column; gap: .6rem; }
+.options.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+@media(max-width:480px){ .options.grid-2{grid-template-columns:1fr} }
+
+.opt-btn {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .85rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  background: var(--white);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.opt-btn:hover {
+  border-color: rgba(224,85,0,.35);
+  background: rgba(224,85,0,.03);
+}
+.opt-btn.selected {
+  border-color: var(--orange);
+  background: rgba(224,85,0,.05);
+  box-shadow: 0 0 0 3px rgba(224,85,0,.08);
+}
+.opt-radio {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--border2);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .15s;
+}
+.opt-btn.selected .opt-radio { border-color: var(--orange); }
+.opt-radio-inner {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
+  transform: scale(0);
+  transition: transform .18s cubic-bezier(.34,1.56,.64,1);
+}
+.opt-btn.selected .opt-radio-inner { transform: scale(1); }
+.opt-text {
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: .02em;
+}
+.opt-sub {
+  font-size: .72rem;
+  color: var(--muted);
+  font-weight: 400;
+  display: block;
+  margin-top: .15rem;
+}
+
+/* ── TEXT INPUT ─── */
+.field-group { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
+.field-label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.field-input, .field-textarea {
+  padding: .75rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  font-family: 'Space Mono', monospace;
+  font-size: .82rem;
+  color: var(--text);
+  background: var(--white);
+  outline: none;
+  transition: border-color .15s;
+  resize: vertical;
+}
+.field-input:focus, .field-textarea:focus {
+  border-color: var(--orange);
+  border-left-width: 2px;
+}
+.field-textarea { min-height: 90px; }
+
+/* ── CHECKBOX OPTIONS ─── */
+.check-btn {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .85rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  background: var(--white);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .15s, background .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.check-btn:hover { border-color: rgba(224,85,0,.35); background: rgba(224,85,0,.03); }
+.check-btn.selected { border-color: var(--orange); background: rgba(224,85,0,.05); }
+.check-box {
+  width: 18px; height: 18px;
+  border-radius: 2px;
+  border: 2px solid var(--border2);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .15s, background .15s;
+}
+.check-btn.selected .check-box {
+  border-color: var(--orange);
+  background: var(--orange);
+}
+.check-mark {
+  font-size: .7rem;
+  color: #fff;
+  opacity: 0;
+  transform: scale(0);
+  transition: opacity .15s, transform .18s cubic-bezier(.34,1.56,.64,1);
+}
+.check-btn.selected .check-mark { opacity: 1; transform: scale(1); }
+
+/* ── NAV BUTTONS ─── */
+.nav-row {
+  display: flex;
+  gap: .75rem;
+  margin-top: 1.75rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.btn-back {
+  padding: .65rem 1.25rem;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  border-radius: 3px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: .9rem;
+  letter-spacing: .1em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-back:hover { border-color: var(--text); color: var(--text); }
+.btn-next {
+  position: relative; overflow: hidden;
+  padding: .75rem 2rem;
+  background: var(--navy);
+  border: none;
+  border-radius: 3px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: .12em;
+  color: #fff;
+  cursor: pointer;
+  transition: background .15s;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+.btn-next::after {
+  content:'';
+  position: absolute; inset: 0;
+  background: linear-gradient(120deg, #C24700 0%, #E05500 100%);
+  opacity: 0;
+  transition: opacity .22s;
+}
+.btn-next:hover::after { opacity: 1; }
+.btn-next-inner { position: relative; z-index: 1; }
+.btn-next:disabled { opacity: .4; cursor: not-allowed; }
+.btn-next:disabled::after { display: none; }
+.btn-submit {
+  position: relative; overflow: hidden;
+  padding: .9rem 2.5rem;
+  background: var(--green);
+  border: none;
+  border-radius: 3px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: .12em;
+  color: #fff;
+  cursor: pointer;
+  transition: background .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-submit:hover { background: #086832; }
+.err-msg {
+  font-size: .72rem;
+  color: var(--red);
+  font-weight: 700;
+  display: none;
+  margin-top: .5rem;
+}
+.err-msg.show { display: block; }
+
+/* ── SUCCESS STATE ─── */
+.success-screen {
+  display: none;
+  text-align: center;
+  padding: 3rem 1rem;
+}
+.success-screen.show { display: block; }
+.success-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--green-bg);
+  border: 2px solid var(--green-bd);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 1.8rem;
+}
+.success-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  letter-spacing: .03em;
+  margin-bottom: .6rem;
+  color: var(--text);
+}
+.success-sub {
+  font-size: .78rem;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+/* ── PROGRESS BAR ─── */
+.progress-wrap {
+  height: 3px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 1.75rem;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange-h), var(--orange));
+  border-radius: 99px;
+  transition: width .4s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── SUMMARY ─── */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: .6rem 0;
+  border-bottom: 1px solid var(--border);
+  gap: 1rem;
+}
+.summary-row:last-child { border-bottom: none; }
+.summary-lbl { font-size: .72rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; flex-shrink: 0; }
+.summary-val { font-size: .82rem; color: var(--text); font-weight: 700; text-align: right; }
+.summary-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: .8rem;
+  letter-spacing: .12em;
+  color: var(--dim);
+  margin-bottom: .75rem;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <div class="logo-text">ZGRADA <span>·</span> UPITNIK</div>
+  </div>
+  <div class="header-badge">Unutrašnjost · 2026</div>
+</header>
+
+<div class="disclaimer-bar">
+  Anketa je anonimna — 2 minute — Rezultati za 3 tjedna
+</div>
+
+<div class="page">
+  <div class="card" id="mainCard">
+
+    <div class="card-intro">
+      <h1>KREČENJE<br><span class="accent">UNUTRAŠNJOSTI</span></h1>
+      <div class="card-intro-sub">Upitnik za stanare · 2026 &nbsp;·&nbsp; ⏱ 2 minute</div>
+    </div>
+
+    <div style="padding-top:1.75rem">
+
+      <!-- PROGRESS -->
+      <div class="progress-wrap">
+        <div class="progress-fill" id="progressFill" style="width:12.5%"></div>
+      </div>
+
+      <!-- STEP DOTS -->
+      <div class="step-bar" id="stepBar"></div>
+
+      <!-- ERROR -->
+      <div class="err-msg" id="errMsg">⚠ Molimo odgovorite na ovo pitanje prije nastavka.</div>
+
+      <!-- ── Q1 ── -->
+      <div class="question-block active" id="q1">
+        <div class="q-number">PITANJE 01 / 09</div>
+        <div class="q-title">Jeste li zainteresirani za krečenje unutrašnjosti zgrade?</div>
+        <div class="options">
+          <button class="opt-btn" data-q="q1" data-val="da" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Da, zainteresiran/a sam</div><span class="opt-sub">Podržavam projekt krečenja</span></div>
+          </button>
+          <button class="opt-btn" data-q="q1" data-val="mozda" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Nisam siguran/a</div><span class="opt-sub">Trebam više informacija</span></div>
+          </button>
+          <button class="opt-btn" data-q="q1" data-val="ne" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Ne, nisam zainteresiran/a</div><span class="opt-sub">Protivim se ovom projektu</span></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Q2 ── -->
+      <div class="question-block" id="q2">
+        <div class="q-number">PITANJE 02 / 09</div>
+        <div class="q-title">Koliko hitnom smatrate krečenje?</div>
+        <div class="options">
+          <button class="opt-btn" data-q="q2" data-val="hitno" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Hitno — treba se napraviti odmah</div><span class="opt-sub">Stanje je loše, ne može čekati</span></div>
+          </button>
+          <button class="opt-btn" data-q="q2" data-val="tromjeseci" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">U roku 3–6 mjeseci</div><span class="opt-sub">Treba se organizirati uskoro</span></div>
+          </button>
+          <button class="opt-btn" data-q="q2" data-val="uskoro" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">U roku 1–2 godine</div><span class="opt-sub">Nije hitno, ali treba planirati</span></div>
+          </button>
+          <button class="opt-btn" data-q="q2" data-val="nije" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Nije hitno</div><span class="opt-sub">Stanje je još u redu</span></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Q3 ── -->
+      <div class="question-block" id="q3">
+        <div class="q-number">PITANJE 03 / 09</div>
+        <div class="q-title">Koji su razlozi za krečenje unutrašnjosti prema vašem mišljenju?</div>
+        <div class="q-desc">Možete odabrati više odgovora.</div>
+        <div class="options" id="q3opts">
+          <button class="check-btn" data-q="q3" data-val="losestanje" onclick="selectCheck(this)">
+            <div class="check-box"><span class="check-mark">✓</span></div>
+            <div><div class="opt-text">Loše stanje zidova</div><span class="opt-sub">Pukotine, mrlje, ljuštenje boje</span></div>
+          </button>
+          <button class="check-btn" data-q="q3" data-val="higijena" onclick="selectCheck(this)">
+            <div class="check-box"><span class="check-mark">✓</span></div>
+            <div><div class="opt-text">Higijenska obnova</div><span class="opt-sub">Redovno održavanje zajedničkih prostora</span></div>
+          </button>
+          <button class="check-btn" data-q="q3" data-val="dugo" onclick="selectCheck(this)">
+            <div class="check-box"><span class="check-mark">✓</span></div>
+            <div><div class="opt-text">Dugo nije krečeno</div><span class="opt-sub">Prošlo je previše vremena od zadnjeg krečenja</span></div>
+          </button>
+          <button class="check-btn" data-q="q3" data-val="izgled" onclick="selectCheck(this)">
+            <div class="check-box"><span class="check-mark">✓</span></div>
+            <div><div class="opt-text">Poboljšanje izgleda hodnika i stubišta</div><span class="opt-sub">Ugodniji zajednički prostori za sve stanare</span></div>
+          </button>
+          <button class="check-btn" data-q="q3" data-val="ostalo_razlog" onclick="selectCheck(this)">
+            <div class="check-box"><span class="check-mark">✓</span></div>
+            <div><div class="opt-text">Ostalo</div></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Q4 ── -->
+      <div class="question-block" id="q4">
+        <div class="q-number">PITANJE 04 / 09</div>
+        <div class="q-title">Koliki financijski doprinos biste bili spremni platiti?</div>
+        <div class="q-desc">Procjena po stanu — ovisno o konačnoj ponudi izvođača.</div>
+        <div class="options">
+          <button class="opt-btn" data-q="q4" data-val="malo" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Do 100 €</div><span class="opt-sub">Simboličan doprinos</span></div>
+          </button>
+          <button class="opt-btn" data-q="q4" data-val="srednje" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">100 – 300 €</div><span class="opt-sub">Realni udio troškova</span></div>
+          </button>
+          <button class="opt-btn" data-q="q4" data-val="vise" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Više od 300 €</div><span class="opt-sub">Spreman/a na veći udio</span></div>
+          </button>
+          <button class="opt-btn" data-q="q4" data-val="nisam" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Nisam spreman/a platiti</div><span class="opt-sub">Tražim drugi način financiranja</span></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Q5 ── -->
+      <div class="question-block" id="q5">
+        <div class="q-number">PITANJE 05 / 09</div>
+        <div class="q-title">Imate li preferiranu boju ili stil fasade?</div>
+        <div class="options">
+          <button class="opt-btn" data-q="q5" data-val="da_boja" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Da, imam preferenciju</div><span class="opt-sub">Opisat ću u komentaru</span></div>
+          </button>
+          <button class="opt-btn" data-q="q5" data-val="neutralno" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Svejedno mi je</div><span class="opt-sub">Prepuštam odluku zajednici</span></div>
+          </button>
+          <button class="opt-btn" data-q="q5" data-val="glasanje" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Želim glasati o boji</div><span class="opt-sub">Treba se organizirati zajedničko glasanje</span></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Q6 ── -->
+      <div class="question-block" id="q6">
+        <div class="q-number">PITANJE 06 / 09</div>
+        <div class="q-title">Jeste li zainteresirani za sudjelovanje u organizaciji?</div>
+        <div class="options">
+          <button class="opt-btn" data-q="q6" data-val="da_org" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Da, volim pomoći</div><span class="opt-sub">Mogu sudjelovati u odabiru izvođača, prikupljanju ponuda itd.</span></div>
+          </button>
+          <button class="opt-btn" data-q="q6" data-val="ograniceno" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Ograničeno</div><span class="opt-sub">Mogu pomoći, ali nemam puno vremena</span></div>
+          </button>
+          <button class="opt-btn" data-q="q6" data-val="ne_org" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Ne, prepuštam drugima</div><span class="opt-sub">Samo financiram</span></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Q7 ── -->
+      <div class="question-block" id="q7">
+        <div class="q-number">PITANJE 07 / 09</div>
+        <div class="q-title">Što još treba urediti u zgradi?</div>
+        <div class="q-desc">Uz krečenje — što bi još bilo korisno napraviti?</div>
+        <div class="options">
+          <button class="opt-btn" data-q="q7" data-val="sanducici" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Postava novih sandučića</div><span class="opt-sub">Zamjena ili obnova poštanskih sandučića</span></div>
+          </button>
+          <button class="opt-btn" data-q="q7" data-val="portafon" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Popravak imena na portafonu</div><span class="opt-sub">Ažuriranje ili dodavanje natpisa stanara</span></div>
+          </button>
+          <button class="opt-btn" data-q="q7" data-val="oboje" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Oboje</div><span class="opt-sub">I sandučići i portafon</span></div>
+          </button>
+          <button class="opt-btn" data-q="q7" data-val="nista_extra" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Samo krečenje, ništa drugo</div></div>
+          </button>
+          <button class="opt-btn" data-q="q7" data-val="ostalo_extra" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Ostalo</div><span class="opt-sub">Napišite u komentaru na kraju upitnika</span></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── Q8 ── -->
+      <div class="question-block" id="q8">
+        <div class="q-number">PITANJE 08 / 09</div>
+        <div class="q-title">Podaci o stanu</div>
+        <div class="q-desc">Nije obavezno. Ako upišete broj mobitela, možemo vas dodati u <strong>WhatsApp grupu</strong> u kojoj ćemo objaviti rezultate za 3 tjedna.</div>
+        <div class="field-group">
+          <div class="field-label">Broj stana (neobavezno)</div>
+          <input class="field-input" type="text" id="brStana" placeholder="npr. 12, ili Prizemlje lijevo">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Broj mobitela (neobavezno)</div>
+          <input class="field-input" type="tel" id="kontakt" placeholder="npr. 091 234 5678">
+        </div>
+      </div>
+
+      <!-- ── Q9 ── -->
+      <div class="question-block" id="q9">
+        <div class="q-number">PITANJE 09 / 09</div>
+        <div class="q-title">Dodatni komentari ili prijedlozi</div>
+        <div class="q-desc">Imate li posebnih napomena — o boji, roku, načinu financiranja ili nečem drugom?</div>
+        <div class="field-group">
+          <textarea class="field-textarea" id="komentar" placeholder="Upišite ovdje…"></textarea>
+        </div>
+
+        <!-- SUMMARY -->
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:1rem 1.25rem;margin-top:1rem">
+          <div class="summary-title">SAŽETAK ODGOVORA</div>
+          <div id="summaryRows"></div>
+        </div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-screen" id="successScreen">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Hvala na odgovoru!</div>
+        <div class="success-sub">Vaši odgovori su zabilježeni. Rezultati ankete bit će objavljeni na novom linku za <strong>3 tjedna</strong>. Ako ste ostavili broj mobitela, bit ćete dodani u WhatsApp grupu gdje ćemo podijeliti link.</div>
+      </div>
+
+      <!-- NAVIGATION -->
+      <div class="nav-row" id="navRow">
+        <button class="btn-back" id="btnBack" onclick="goBack()" style="visibility:hidden">← Natrag</button>
+        <button class="btn-next" id="btnNext" onclick="goNext()">
+          <span class="btn-next-inner">Sljedeće →</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const TOTAL = 9;
+// ── ZAMIJENITE S VAŠIM GOOGLE SHEETS URL-om ──────────────────
+const SHEETS_URL = 'ZALIJEPITE_GOOGLE_SHEETS_URL_OVDJE';
+// ─────────────────────────────────────────────────────────────
+let current = 1;
+const answers = {};
+
+const labels = {
+  q1: 'Interes za krečenje',
+  q2: 'Hitnost',
+  q3: 'Razlozi',
+  q4: 'Financijski doprinos',
+  q5: 'Boja fasade',
+  q6: 'Organizacija',
+  q7: 'Dodatna uređenja',
+};
+const valLabels = {
+  da:'Da, zainteresiran/a', mozda:'Nisam siguran/a', ne:'Ne, nisam zainteresiran/a',
+  hitno:'Hitno (odmah)', tromjeseci:'3–6 mjeseci', uskoro:'1–2 godine', nije:'Nije hitno',
+  malo:'Do 100 €', srednje:'100–300 €', vise:'Više od 300 €', nisam:'Ne plaćam',
+  da_boja:'Da, imam preferenciju', neutralno:'Svejedno mi je', glasanje:'Glasanje o boji',
+  da_org:'Da, mogu pomoći', ograniceno:'Ograničeno', ne_org:'Ne, prepuštam',
+  sanducici:'Novi sandučići', portafon:'Popravak imena na portafonu', oboje:'Sandučići + portafon', nista_extra:'Samo krečenje', ostalo_extra:'Ostalo', losestanje:'Loše stanje zidova', higijena:'Higijenska obnova', dugo:'Dugo nije krečeno', ostalo_razlog:'Ostalo',
+};
+
+function buildSteps() {
+  const bar = document.getElementById('stepBar');
+  bar.innerHTML = '';
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.createElement('div');
+    d.className = 'step-dot' + (i < current ? ' done' : i === current ? ' active' : '');
+    bar.appendChild(d);
+  }
+  const lbl = document.createElement('div');
+  lbl.className = 'step-label';
+  lbl.textContent = `${current} / ${TOTAL}`;
+  bar.appendChild(lbl);
+}
+
+function updateProgress() {
+  const pct = (current / (TOTAL + 1)) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function selectOpt(btn) {
+  const q = btn.dataset.q;
+  document.querySelectorAll(`.opt-btn[data-q="${q}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[q] = btn.dataset.val;
+  hideErr();
+}
+
+function selectCheck(btn) {
+  btn.classList.toggle('selected');
+  const q = btn.dataset.q;
+  const selected = [...document.querySelectorAll(`.check-btn[data-q="${q}"].selected`)].map(b => b.dataset.val);
+  answers[q] = selected;
+  hideErr();
+}
+
+function hideErr() { document.getElementById('errMsg').classList.remove('show'); }
+
+function validate() {
+  if (current === 1 && !answers.q1) return false;
+  if (current === 2 && !answers.q2) return false;
+  if (current === 3 && (!answers.q3 || answers.q3.length === 0)) return false;
+  if (current === 4 && !answers.q4) return false;
+  if (current === 5 && !answers.q5) return false;
+  if (current === 6 && !answers.q6) return false;
+  return true;
+}
+
+function goNext() {
+  if (current <= 6 && !validate()) {
+    document.getElementById('errMsg').classList.add('show');
+    return;
+  }
+  if (current === 9) { submitForm(); return; }
+
+  document.getElementById('q' + current).classList.remove('active');
+  current++;
+
+  if (current === 9) {
+    buildSummary();
+    document.getElementById('btnNext').innerHTML = '<span class="btn-next-inner">Pošalji ✓</span>';
+    document.getElementById('btnNext').style.background = 'var(--green)';
+  }
+
+  document.getElementById('q' + current).classList.add('active');
+  document.getElementById('btnBack').style.visibility = 'visible';
+  buildSteps();
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goBack() {
+  if (current === 1) return;
+  document.getElementById('q' + current).classList.remove('active');
+  current--;
+  document.getElementById('q' + current).classList.add('active');
+  if (current === 1) document.getElementById('btnBack').style.visibility = 'hidden';
+  document.getElementById('btnNext').innerHTML = '<span class="btn-next-inner">Sljedeće →</span>';
+  document.getElementById('btnNext').style.background = '';
+  buildSteps();
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildSummary() {
+  const rows = document.getElementById('summaryRows');
+  rows.innerHTML = '';
+  const qs = ['q1','q2','q3','q4','q5','q6','q7'];
+  qs.forEach(q => {
+    if (!answers[q]) return;
+    const row = document.createElement('div');
+    row.className = 'summary-row';
+    let val = answers[q];
+    if (Array.isArray(val)) val = val.map(v => valLabels[v]||v).join(', ');
+    else val = valLabels[val] || val;
+    row.innerHTML = `<div class="summary-lbl">${labels[q]}</div><div class="summary-val">${val}</div>`;
+    rows.appendChild(row);
+  });
+}
+
+function submitForm() {
+  answers.brStana = document.getElementById('brStana').value.trim();
+  answers.kontakt = document.getElementById('kontakt').value.trim();
+  answers.komentar = document.getElementById('komentar').value.trim();
+  answers.timestamp = new Date().toISOString();
+
+  if (SHEETS_URL !== 'ZALIJEPITE_GOOGLE_SHEETS_URL_OVDJE') {
+    new Image().src = SHEETS_URL + '?' + new URLSearchParams(answers);
+  }
+
+  document.getElementById('q9').classList.remove('active');
+  document.getElementById('navRow').style.display = 'none';
+  document.getElementById('stepBar').style.display = 'none';
+  document.getElementById('progressFill').parentElement.style.display = 'none';
+  document.getElementById('successScreen').classList.add('show');
+}
+
+// Init
+buildSteps();
+updateProgress();
+</script>
+</body>
+</html>
