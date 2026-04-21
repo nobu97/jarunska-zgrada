@@ -844,9 +844,13 @@ function submitForm() {
   answers.komentar = document.getElementById('komentar').value.trim();
   answers.timestamp = new Date().toISOString();
 
-  if (SHEETS_URL !== 'https://script.google.com/macros/s/AKfycbyAP0WzSJDexkEqmO_0cPDoKO_7SCqyKmQOnruAOtSgxnmfzWJc3DyKnW2rx38kus88yg/exec') {
-    new Image().src = SHEETS_URL + '?' + new URLSearchParams(answers);
-  }
+  // Flatten arrays to string
+  const flat = {};
+  Object.keys(answers).forEach(k => {
+    flat[k] = Array.isArray(answers[k]) ? answers[k].join(', ') : answers[k];
+  });
+
+  fetch(SHEETS_URL + '?' + new URLSearchParams(flat), { mode: 'no-cors' });
 
   document.getElementById('q9').classList.remove('active');
   document.getElementById('navRow').style.display = 'none';
