@@ -716,7 +716,7 @@ header {
 <script>
 const TOTAL = 9;
 // ── ZAMIJENITE S VAŠIM GOOGLE SHEETS URL-om ──────────────────
-const SHEETS_URL = 'ZALIJEPITE_GOOGLE_SHEETS_URL_OVDJE';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyAP0WzSJDexkEqmO_0cPDoKO_7SCqyKmQOnruAOtSgxnmfzWJc3DyKnW2rx38kus88yg/exec';
 // ─────────────────────────────────────────────────────────────
 let current = 1;
 const answers = {};
@@ -844,7 +844,7 @@ function submitForm() {
   answers.komentar = document.getElementById('komentar').value.trim();
   answers.timestamp = new Date().toISOString();
 
-  if (SHEETS_URL !== 'ZALIJEPITE_GOOGLE_SHEETS_URL_OVDJE') {
+  if (SHEETS_URL !== 'https://script.google.com/macros/s/AKfycbyAP0WzSJDexkEqmO_0cPDoKO_7SCqyKmQOnruAOtSgxnmfzWJc3DyKnW2rx38kus88yg/exec') {
     new Image().src = SHEETS_URL + '?' + new URLSearchParams(answers);
   }
 
