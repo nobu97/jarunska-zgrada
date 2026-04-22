@@ -450,7 +450,7 @@ header {
 }
 .summary-row:last-child { border-bottom: none; }
 .summary-lbl { font-size: .72rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; flex-shrink: 0; }
-.summary-val { font-size: .82rem; color: var(--text); font-weight: 700; text-align: right; }
+.summary-val { font-size: .82rem; color: var(--text); font-weight: 700; text-align: right; word-break: break-word; min-width: 0; }
 .summary-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: .8rem;
@@ -519,7 +519,7 @@ header {
       <!-- ── Q2 ── -->
       <div class="question-block" id="q2">
         <div class="q-number">PITANJE 02 / 09</div>
-        <div class="q-title">Koliko hitnom smatrate krečenje?</div>
+        <div class="q-title">Koliko je hitno po vašem mišljenju?</div>
         <div class="options">
           <button class="opt-btn" data-q="q2" data-val="hitno" onclick="selectOpt(this)">
             <div class="opt-radio"><div class="opt-radio-inner"></div></div>
@@ -572,24 +572,24 @@ header {
       <!-- ── Q4 ── -->
       <div class="question-block" id="q4">
         <div class="q-number">PITANJE 04 / 09</div>
-        <div class="q-title">Koliki financijski doprinos biste bili spremni platiti?</div>
-        <div class="q-desc">Procjena po stanu — ovisno o konačnoj ponudi izvođača.</div>
+        <div class="q-title">Je li iznos od oko 300–400 € po stanu prihvatljiv?</div>
+        <div class="q-desc">Procjena: ukupni trošak ~8000 € ÷ 24 stana. Točan iznos ovisi o ponudi izvođača.</div>
         <div class="options">
-          <button class="opt-btn" data-q="q4" data-val="malo" onclick="selectOpt(this)">
+          <button class="opt-btn" data-q="q4" data-val="da_cijena" onclick="selectOpt(this)">
             <div class="opt-radio"><div class="opt-radio-inner"></div></div>
-            <div><div class="opt-text">Do 100 €</div><span class="opt-sub">Simboličan doprinos</span></div>
+            <div><div class="opt-text">Da, u redu je</div><span class="opt-sub">Mogu platiti odjednom</span></div>
           </button>
-          <button class="opt-btn" data-q="q4" data-val="srednje" onclick="selectOpt(this)">
+          <button class="opt-btn" data-q="q4" data-val="rata" onclick="selectOpt(this)">
             <div class="opt-radio"><div class="opt-radio-inner"></div></div>
-            <div><div class="opt-text">100 – 300 €</div><span class="opt-sub">Realni udio troškova</span></div>
+            <div><div class="opt-text">Da, ali u ratama</div><span class="opt-sub">Trebam plaćati kroz 2–3 mjeseca</span></div>
           </button>
-          <button class="opt-btn" data-q="q4" data-val="vise" onclick="selectOpt(this)">
+          <button class="opt-btn" data-q="q4" data-val="manje" onclick="selectOpt(this)">
             <div class="opt-radio"><div class="opt-radio-inner"></div></div>
-            <div><div class="opt-text">Više od 300 €</div><span class="opt-sub">Spreman/a na veći udio</span></div>
+            <div><div class="opt-text">Previše je</div><span class="opt-sub">Tražim jeftinije rješenje</span></div>
           </button>
-          <button class="opt-btn" data-q="q4" data-val="nisam" onclick="selectOpt(this)">
+          <button class="opt-btn" data-q="q4" data-val="ne_cijena" onclick="selectOpt(this)">
             <div class="opt-radio"><div class="opt-radio-inner"></div></div>
-            <div><div class="opt-text">Nisam spreman/a platiti</div><span class="opt-sub">Tražim drugi način financiranja</span></div>
+            <div><div class="opt-text">Ne mogu platiti</div><span class="opt-sub">Tražim drugi način financiranja</span></div>
           </button>
         </div>
       </div>
@@ -597,19 +597,24 @@ header {
       <!-- ── Q5 ── -->
       <div class="question-block" id="q5">
         <div class="q-number">PITANJE 05 / 09</div>
-        <div class="q-title">Imate li preferiranu boju ili stil fasade?</div>
+        <div class="q-title">Kad bi vam najbolje odgovaralo da se kreči?</div>
+        <div class="q-desc">Radovi traju par dana i uzrokuju buku i prljavštinu u zajedničkim prostorima.</div>
         <div class="options">
-          <button class="opt-btn" data-q="q5" data-val="da_boja" onclick="selectOpt(this)">
+          <button class="opt-btn" data-q="q5" data-val="proljece" onclick="selectOpt(this)">
             <div class="opt-radio"><div class="opt-radio-inner"></div></div>
-            <div><div class="opt-text">Da, imam preferenciju</div><span class="opt-sub">Opisat ću u komentaru</span></div>
+            <div><div class="opt-text">Proljeće</div><span class="opt-sub">Ožujak – svibanj</span></div>
           </button>
-          <button class="opt-btn" data-q="q5" data-val="neutralno" onclick="selectOpt(this)">
+          <button class="opt-btn" data-q="q5" data-val="ljeto" onclick="selectOpt(this)">
             <div class="opt-radio"><div class="opt-radio-inner"></div></div>
-            <div><div class="opt-text">Svejedno mi je</div><span class="opt-sub">Prepuštam odluku zajednici</span></div>
+            <div><div class="opt-text">Ljeto</div><span class="opt-sub">Lipanj – kolovoz, dok su mnogi na odmoru</span></div>
           </button>
-          <button class="opt-btn" data-q="q5" data-val="glasanje" onclick="selectOpt(this)">
+          <button class="opt-btn" data-q="q5" data-val="jesen" onclick="selectOpt(this)">
             <div class="opt-radio"><div class="opt-radio-inner"></div></div>
-            <div><div class="opt-text">Želim glasati o boji</div><span class="opt-sub">Treba se organizirati zajedničko glasanje</span></div>
+            <div><div class="opt-text">Jesen</div><span class="opt-sub">Rujan – studeni</span></div>
+          </button>
+          <button class="opt-btn" data-q="q5" data-val="svejedno_rok" onclick="selectOpt(this)">
+            <div class="opt-radio"><div class="opt-radio-inner"></div></div>
+            <div><div class="opt-text">Svejedno mi je</div><span class="opt-sub">Što prije, to bolje</span></div>
           </button>
         </div>
       </div>
@@ -725,16 +730,16 @@ const labels = {
   q1: 'Interes za krečenje',
   q2: 'Hitnost',
   q3: 'Razlozi',
-  q4: 'Financijski doprinos',
-  q5: 'Boja fasade',
+  q4: 'Prihvatljiva cijena',
+  q5: 'Kad kreciti',
   q6: 'Organizacija',
   q7: 'Dodatna uređenja',
 };
 const valLabels = {
   da:'Da, zainteresiran/a', mozda:'Nisam siguran/a', ne:'Ne, nisam zainteresiran/a',
   hitno:'Hitno (odmah)', tromjeseci:'3–6 mjeseci', uskoro:'1–2 godine', nije:'Nije hitno',
-  malo:'Do 100 €', srednje:'100–300 €', vise:'Više od 300 €', nisam:'Ne plaćam',
-  da_boja:'Da, imam preferenciju', neutralno:'Svejedno mi je', glasanje:'Glasanje o boji',
+  da_cijena:'Da, u redu je', rata:'Da, u ratama', manje:'Previše je', ne_cijena:'Ne mogu platiti',
+  proljece:'Proljeće', ljeto:'Ljeto', jesen:'Jesen', svejedno_rok:'Svejedno / što prije',
   da_org:'Da, mogu pomoći', ograniceno:'Ograničeno', ne_org:'Ne, prepuštam',
   sanducici:'Novi sandučići', portafon:'Popravak imena na portafonu', oboje:'Sandučići + portafon', nista_extra:'Samo krečenje', ostalo_extra:'Ostalo', losestanje:'Loše stanje zidova', higijena:'Higijenska obnova', dugo:'Dugo nije krečeno', ostalo_razlog:'Ostalo',
 };
